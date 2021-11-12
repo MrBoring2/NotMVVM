@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище TestProductsModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Materials">
+    <Key>
+      <PropertyRef Name="MaterialName" />
+    </Key>
+    <Property Name="MaterialName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Price" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Amount" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MaterialToProduct">
+    <Key>
+      <PropertyRef Name="ProductName" />
+      <PropertyRef Name="MaterialName" />
+    </Key>
+    <Property Name="ProductName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="MaterialName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="AmountOfMaterial" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Products">
+    <Key>
+      <PropertyRef Name="ProductName" />
+    </Key>
+    <Property Name="ProductName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Amount" Type="int" Nullable="false" />
+    <Property Name="Supplier" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Type" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="ImagePath" Type="nvarchar(max)" />
+  </EntityType>
+  <Association Name="FK_MaterialToProduct_Materials">
+    <End Role="Materials" Type="Self.Materials" Multiplicity="1" />
+    <End Role="MaterialToProduct" Type="Self.MaterialToProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Materials">
+        <PropertyRef Name="MaterialName" />
+      </Principal>
+      <Dependent Role="MaterialToProduct">
+        <PropertyRef Name="MaterialName" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MaterialToProduct_Products">
+    <End Role="Products" Type="Self.Products" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="MaterialToProduct" Type="Self.MaterialToProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductName" />
+      </Principal>
+      <Dependent Role="MaterialToProduct">
+        <PropertyRef Name="ProductName" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Хранилище TestProductsModelContainer">
+    <EntitySet Name="Materials" EntityType="Self.Materials" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MaterialToProduct" EntityType="Self.MaterialToProduct" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_MaterialToProduct_Materials" Association="Self.FK_MaterialToProduct_Materials">
+      <End Role="Materials" EntitySet="Materials" />
+      <End Role="MaterialToProduct" EntitySet="MaterialToProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MaterialToProduct_Products" Association="Self.FK_MaterialToProduct_Products">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="MaterialToProduct" EntitySet="MaterialToProduct" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

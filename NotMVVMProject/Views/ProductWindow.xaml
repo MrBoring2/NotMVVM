@@ -1,0 +1,57 @@
+﻿<Window x:Class="NotMVVMProject.Views.ProductWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NotMVVMProject.Views"
+        mc:Ignorable="d"
+        Title="Продукт" Height="450" Width="830">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="317*"/>
+            <ColumnDefinition Width="274*"/>
+            <ColumnDefinition Width="231*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="65*"/>
+            <RowDefinition Height="15*"/>
+        </Grid.RowDefinitions>
+        <Frame Background="LightGreen" Grid.ColumnSpan="3"/>
+        <TextBlock HorizontalAlignment="Left" Margin="5,5,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Название" VerticalAlignment="Top" Height="16" Width="53"/>
+        <TextBox x:Name="ProductNameTextBox" HorizontalAlignment="Stretch" Height="23" Margin="5,23,5,5" Grid.Row="1" TextWrapping="Wrap" Text="{Binding ProductName}" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="5,5,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Поставщик" VerticalAlignment="Top" Grid.Column="1" Height="16" Width="72" />
+        <TextBox HorizontalAlignment="Stretch" Height="23" Margin="5,23,5,5" Grid.Row="1" TextWrapping="Wrap" Text="{Binding Supplier}" VerticalAlignment="Top" Grid.Column="1"/>
+        <TextBlock HorizontalAlignment="Left" Margin="5,5,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Тип продукта" VerticalAlignment="Top" Height="16" Width="74"/>
+        <ComboBox HorizontalAlignment="Stretch" Height="23" Margin="5,23,5,5" Grid.Row="2" ItemsSource="{Binding Types}" SelectedItem="{Binding SelectedType}" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="5,5,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Количество" VerticalAlignment="Top" Grid.Column="1" Height="16" Width="72"/>
+        <TextBox HorizontalAlignment="Stretch" Height="23" Margin="5,23,5,0" Grid.Row="2" TextWrapping="Wrap" Text="{Binding Amount}" VerticalAlignment="Top" Grid.Column="1"/>
+        <TextBlock HorizontalAlignment="Left" Height="23" Margin="5,5,5,0" Grid.Row="3" TextWrapping="Wrap" Text="Материалы" VerticalAlignment="Top" Width="120"/>
+        <ListView HorizontalContentAlignment="Stretch" ItemsSource="{Binding MaterialsList}" SelectedItem="{Binding SelectedMaterial}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,24,5,28" Grid.Row="3">
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type ListViewItem}">
+                    <Grid>
+                        <TextBlock HorizontalAlignment="Left" Margin="1,1,0,0" Text="{Binding MaterialName}"/>
+                        <TextBlock HorizontalAlignment="Right" Margin="0,1,1,0" Text="{Binding Amount}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <TextBlock HorizontalAlignment="Left" Height="23" Margin="5,5,0,0" Grid.Row="3" TextWrapping="Wrap" Text="Добавить материалы" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
+        <ComboBox ItemsSource="{Binding FilterMaterials}" DisplayMemberPath="MaterialName" SelectedItem="{Binding SelectedAddMaterial}" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,75,5,0" Grid.Row="3" VerticalAlignment="Top" Height="22"/>
+        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="5,28,5,0" Grid.Row="3" TextWrapping="Wrap" Text="Поиск" VerticalAlignment="Top" Height="16" Width="44"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Height="23" Margin="5,45,5,0" Grid.Row="3" TextWrapping="Wrap" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top"/>
+        <Button x:Name="AddToList" Content="Добавить" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,155,5,0" Grid.Row="3" VerticalAlignment="Top" Height="20" Click="AddToList_Click"/>
+        <Button x:Name="RemoveFromList" Content="Удалить из списка" HorizontalAlignment="Stretch" Margin="5,0,5,5" Grid.Row="3" VerticalAlignment="Bottom" Height="20" Click="RemoveFromList_Click"/>
+        <Button x:Name="Save" Content="Сохранить" HorizontalAlignment="Left" Margin="5,28,0,0" Grid.Row="4" VerticalAlignment="Top" Width="75" Height="20" Click="Save_Click"/>
+        <Button x:Name="Cancel" Content="Отмена" HorizontalAlignment="Left" Margin="92,28,0,0" Grid.Row="4" VerticalAlignment="Top" Width="75" Height="20" Click="Cancel_Click"/>
+        <Button x:Name="Delete" Content="Удалить" Visibility="Hidden" HorizontalAlignment="Left" Margin="178,28,0,0" Grid.Row="4" VerticalAlignment="Top" Click="Delete_Click"  Width="75" Height="20"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,5,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Картинка" VerticalAlignment="Top" Grid.Column="2" Height="16" Width="72" />
+        <Image Source="{Binding Image, Converter={StaticResource imgConv}}" Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="1" Stretch="Uniform" Grid.RowSpan="3" Margin="10,25,10,150" VerticalAlignment="Stretch"/>
+        <Button x:Name="LoadImage" Content="Загрузить картинку" Grid.Column="2" HorizontalAlignment="Stretch" Margin="5,0,5,95" Grid.Row="3" VerticalAlignment="Bottom" Height="20" Click="LoadImage_Click"/>
+        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="5,102,0,0" Grid.Row="3" TextWrapping="Wrap" Text="Количетсво" VerticalAlignment="Top"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Height="23" Margin="5,122,5,0" Grid.Row="3" TextWrapping="Wrap" Text="{Binding AmountOfMaterial}" VerticalAlignment="Top"/>
+    </Grid>
+</Window>

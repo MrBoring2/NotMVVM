@@ -1,0 +1,19 @@
+﻿<Application x:Class="NotMVVMProject.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:NotMVVMProject"
+             xmlns:converters="clr-namespace:NotMVVMProject.Converters"
+             ShutdownMode="OnLastWindowClose">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <converters:ImageConverter x:Key="imgConv"/>
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:ProductMaterialsConverter x:Key="matConv"/>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

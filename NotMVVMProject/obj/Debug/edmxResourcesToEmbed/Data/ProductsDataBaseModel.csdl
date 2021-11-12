@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TestProductsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Materials">
+    <Key>
+      <PropertyRef Name="MaterialName" />
+    </Key>
+    <Property Name="MaterialName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Price" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Amount" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="MaterialToProduct" Relationship="Self.FK_MaterialToProduct_Materials" FromRole="Materials" ToRole="MaterialToProduct" />
+  </EntityType>
+  <EntityType Name="MaterialToProduct">
+    <Key>
+      <PropertyRef Name="ProductName" />
+      <PropertyRef Name="MaterialName" />
+    </Key>
+    <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="MaterialName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="AmountOfMaterial" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Materials" Relationship="Self.FK_MaterialToProduct_Materials" FromRole="MaterialToProduct" ToRole="Materials" />
+    <NavigationProperty Name="Products" Relationship="Self.FK_MaterialToProduct_Products" FromRole="MaterialToProduct" ToRole="Products" />
+  </EntityType>
+  <EntityType Name="Products">
+    <Key>
+      <PropertyRef Name="ProductName" />
+    </Key>
+    <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Amount" Type="Int32" Nullable="false" />
+    <Property Name="Supplier" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="ImagePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="MaterialToProduct" Relationship="Self.FK_MaterialToProduct_Products" FromRole="Products" ToRole="MaterialToProduct" />
+  </EntityType>
+  <Association Name="FK_MaterialToProduct_Materials">
+    <End Role="Materials" Type="Self.Materials" Multiplicity="1" />
+    <End Role="MaterialToProduct" Type="Self.MaterialToProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Materials">
+        <PropertyRef Name="MaterialName" />
+      </Principal>
+      <Dependent Role="MaterialToProduct">
+        <PropertyRef Name="MaterialName" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MaterialToProduct_Products">
+    <End Role="Products" Type="Self.Products" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="MaterialToProduct" Type="Self.MaterialToProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductName" />
+      </Principal>
+      <Dependent Role="MaterialToProduct">
+        <PropertyRef Name="ProductName" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="TestProductsEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Materials" EntityType="Self.Materials" />
+    <EntitySet Name="MaterialToProduct" EntityType="Self.MaterialToProduct" />
+    <EntitySet Name="Products" EntityType="Self.Products" />
+    <AssociationSet Name="FK_MaterialToProduct_Materials" Association="Self.FK_MaterialToProduct_Materials">
+      <End Role="Materials" EntitySet="Materials" />
+      <End Role="MaterialToProduct" EntitySet="MaterialToProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MaterialToProduct_Products" Association="Self.FK_MaterialToProduct_Products">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="MaterialToProduct" EntitySet="MaterialToProduct" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
