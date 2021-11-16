@@ -19,7 +19,7 @@ C:\Users\MrBoring\source\repos\NotMVVMProject\NotMVVMProject\bin\Debug\EntityFra
 C:\Users\MrBoring\source\repos\NotMVVMProject\NotMVVMProject\bin\Debug\EntityFramework.SqlServer.xml
 C:\Users\MrBoring\source\repos\NotMVVMProject\NotMVVMProject\bin\Debug\ru\EntityFramework.resources.dll
 C:\Users\MrBoring\source\repos\NotMVVMProject\NotMVVMProject\obj\Debug\NotMVVMProject.csproj.CopyComplete
-C:\Users\MrBoring\source\repos\NotMVVMProject\NotMVVMProject\obj\Debug\NotMVVMProject.csproj.AssemblyReference.cache
 C:\Users\MrBoring\source\repos\NotMVVMProject\NotMVVMProject\obj\Debug\Views\ProductWindow.g.cs
 C:\Users\MrBoring\source\repos\NotMVVMProject\NotMVVMProject\obj\Debug\Views\ProductWindow.baml
 C:\Users\MrBoring\source\repos\NotMVVMProject\NotMVVMProject\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\MrBoring\source\repos\NotMVVMProject\NotMVVMProject\obj\Debug\NotMVVMProject.csproj.AssemblyReference.cache

@@ -20,7 +20,7 @@
                 <ColumnDefinition Width="250*"/>
             </Grid.ColumnDefinitions>
             <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Поиск" VerticalAlignment="Top"/>
-            <TextBox HorizontalAlignment="Stretch" Height="24" Margin="10,35,10,0" TextWrapping="Wrap" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top"/>
+            <TextBox HorizontalAlignment="Stretch" Height="24" Margin="10,35,10,0" TextWrapping="Wrap" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" ToolTip=""/>
             <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="10,13,0,0" TextWrapping="Wrap" Text="Фильтрация" VerticalAlignment="Top"/>
             <ComboBox ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedType}" Grid.Column="1" HorizontalAlignment="Stretch" Margin="10,35,10,0" VerticalAlignment="Top"/>
             <Grid Grid.Column="2">
@@ -61,9 +61,23 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <Button x:Name="Back" Content="Назад" HorizontalAlignment="Right" Margin="0,10,180,8" Grid.Row="2" VerticalAlignment="Bottom" Width="75" Click="Back_Click" Height="20"/>
-        <Button x:Name="Forward" Content="Вперёд" HorizontalAlignment="Right" Margin="0,0,10,8" Grid.Row="2" VerticalAlignment="Bottom" Width="75" Click="Forward_Click" Height="20"/>
-        <TextBlock HorizontalAlignment="Right" Margin="0,0,150,10" Grid.Row="2" TextWrapping="Wrap" Text="{Binding DispayPages}" VerticalAlignment="Bottom" Height="16"/>
-        <Button x:Name="Add" Content="Добавить" HorizontalAlignment="Left" Margin="5,0,0,9" Grid.Row="2" VerticalAlignment="Bottom" Width="75" Click="Add_Click" Height="20"/>
+        <TextBlock HorizontalAlignment="Right" Margin="0,0,602,10" Grid.Row="2" TextWrapping="Wrap" Text="{Binding DispayPages}" VerticalAlignment="Bottom" Height="16"/>
+        <Button x:Name="Add" Content="Добавить" HorizontalAlignment="Left" Margin="5,0,5,9" Grid.Row="2" VerticalAlignment="Bottom" Width="75" Click="Add_Click" Height="20"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="5" VerticalAlignment="Bottom">
+            <Button x:Name="toFirstPage" Content="«" Width="20" FontSize="16" Click="toFirstPage_Click"/>
+            <ListView ItemsSource="{Binding DisplayedPagesNumbers}" SelectedIndex="{Binding SelectedPageIndex}" SelectedItem="{Binding SelectedPageNumber}" FontStyle="Oblique" Width="auto" SelectionChanged="ListView_SelectionChanged" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontStyle="Italic" Height="20" Width="20" TextAlignment="Center"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
+            <Button x:Name="toLastPage" Content="»" Width="20" FontSize="16" Click="toLastPage_Click"/>
+        </StackPanel>
     </Grid>
 </Window>

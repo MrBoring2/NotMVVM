@@ -25,21 +25,29 @@ namespace NotMVVMProject.Views
     public partial class ProductsWindow : INotifyPropertyChanged
     {
         #region Fields
+        private int maxDisplayedPages = 5;
         private ObservableCollection<Products> filteredProducts;
+        private ObservableCollection<int> pagesNumbers;
+        private ObservableCollection<int> displayedPagesNumbers;
         private Products selectedProduct;
+        private int selectedPageNumber;
+        private int selectedPageIndex;
         private string selectedType;
         private FilterItem selectedSort;
-        private int maxItemsOnPage = 5;
-        private int curentPage;
+        private int maxItemsOnPage = 3;
         private string searchText;
         private bool orderByDescening;
         #endregion
 
         #region Properties
         public Products SelectedProduct { get => selectedProduct; set { selectedProduct = value; OnPropertyChanged(); } }
+        public ObservableCollection<int> PagesNumbers { get => pagesNumbers; set { pagesNumbers = value; OnPropertyChanged(); } }
+
+        public int SelectedPageNumber { get => selectedPageNumber; set { selectedPageNumber = value; OnPropertyChanged(); } }
+        public int SelectedPageIndex { get => selectedPageIndex; set { selectedPageIndex = value; OnPropertyChanged(); } }
+        public ObservableCollection<int> DisplayedPagesNumbers { get => displayedPagesNumbers; set { displayedPagesNumbers = value; OnPropertyChanged(); } }
         public bool OrderByDescening { get => orderByDescening; set { orderByDescening = value; OnPropertyChanged(nameof(OrderByDescening)); FilterProducts(SearchText, SelectedType, SelectedSort.Property, orderByDescening); } }
-        public string SearchText { get => searchText; set { searchText = value; OnPropertyChanged(nameof(SearchText)); FilterProducts(SearchText, SelectedType, SelectedSort.Property, orderByDescening); } }
-        private int CurrentPage { get => curentPage; set { curentPage = value; FilterProducts(SearchText, SelectedType, SelectedSort.Property, orderByDescening); } }
+        public string SearchText { get => searchText; set { searchText = value; OnPropertyChanged(nameof(SearchText)); FilterProducts(SearchText, SelectedType, SelectedSort.Property, orderByDescening); RefreshPages(); } }
         private int MaxPage
         {
             get => Convert.ToInt32(Math.Ceiling((float)Products
@@ -47,7 +55,7 @@ namespace NotMVVMProject.Views
                     .Contains(SearchText))
                     .Where(p => SelectedType.Equals("Все типы") ? p.Type.Contains("") : p.Type.Equals(SelectedType)).Count() / (float)maxItemsOnPage));
         }
-        public string DispayPages { get => $"{CurrentPage + 1}/{MaxPage}"; }
+        public string DispayPages { get => $"{SelectedPageNumber}/{MaxPage}"; }
         private ObservableCollection<Products> Products { get; set; }
         public ObservableCollection<Products> FilteredProducts
         {
@@ -60,7 +68,7 @@ namespace NotMVVMProject.Views
         }
         public List<string> FilterTypes { get; set; }
         public List<FilterItem> SortParams { get; set; }
-        public string SelectedType { get => selectedType; set { selectedType = value; OnPropertyChanged(nameof(SelectedType)); FilterProducts(SearchText, SelectedType, SelectedSort.Property, orderByDescening); } }
+        public string SelectedType { get => selectedType; set { selectedType = value; OnPropertyChanged(nameof(SelectedType)); FilterProducts(SearchText, SelectedType, SelectedSort.Property, orderByDescening); RefreshPages(); } }
         public FilterItem SelectedSort { get => selectedSort; set { selectedSort = value; OnPropertyChanged(nameof(SelectedSort)); FilterProducts(SearchText, SelectedType, SelectedSort.Property, orderByDescening); } }
         #endregion
 
@@ -71,11 +79,14 @@ namespace NotMVVMProject.Views
             LoadSortParams();
 
             InitializeFields();
+
             InitializeComponent();
 
-            // Устанавливаем коснекстом данных этот же класс
+            // Устанавливаем костекстом данных этот же класс
             DataContext = this;
         }
+
+
 
         #region Methods
         /// <summary>
@@ -86,7 +97,30 @@ namespace NotMVVMProject.Views
             searchText = string.Empty;
             selectedSort = SortParams[0];
             selectedType = FilterTypes[0];
-            CurrentPage = 0;
+            LoadPages();
+            DisplayedPagesNumbers = new ObservableCollection<int>(PagesNumbers.Take(maxDisplayedPages));
+            SelectedPageNumber = 1;
+        }
+        /// <summary>
+        /// Заполняем список страниц новыми номерами
+        /// </summary>
+        private void LoadPages()
+        {
+            PagesNumbers = new ObservableCollection<int>();
+            for (int i = 0; i < MaxPage; i++)
+            {
+                PagesNumbers.Add(i + 1);
+            }
+        }
+        private void RefreshPages()
+        {
+            LoadPages();
+            DisplayedPagesNumbers = new ObservableCollection<int>(PagesNumbers
+                    .Take(maxDisplayedPages));
+            if(SelectedPageNumber > DisplayedPagesNumbers.Count)
+            {
+                SelectedPageNumber = DisplayedPagesNumbers.LastOrDefault();
+            }
         }
         /// <summary>
         /// Загрузка продуктов из базы данных
@@ -137,7 +171,7 @@ namespace NotMVVMProject.Views
                 Products.OrderByDescending(p => p.GetProperty(orderBy))
                 .Where(p => p.ProductName.Contains(search))
                 .Where(p => filterType == "Все типы" ? p.Type.Contains("") : p.Type.Equals(filterType))
-                .Skip(CurrentPage * maxItemsOnPage).Take(maxItemsOnPage));
+                .Skip((SelectedPageNumber - 1) * maxItemsOnPage).Take(maxItemsOnPage));
             }
             else
             {
@@ -145,36 +179,48 @@ namespace NotMVVMProject.Views
                 Products.OrderBy(p => p.GetProperty(orderBy))
                 .Where(p => p.ProductName.Contains(search))
                 .Where(p => filterType == "Все типы" ? p.Type.Contains("") : p.Type.Equals(filterType))
-                .Skip(CurrentPage * maxItemsOnPage).Take(maxItemsOnPage));
+                .Skip((SelectedPageNumber - 1) * maxItemsOnPage).Take(maxItemsOnPage));
 
             }
 
             OnPropertyChanged(nameof(DispayPages));
         }
 
+        private void ChangePage()
+        {
+            //if (SelectedPageIndex >= Math.Ceiling((float)DisplayedPagesNumbers.Count / (float)2))
+
+            if (SelectedPageNumber <= PageListAvg(DisplayedPagesNumbers))
+            {
+                DisplayedPagesNumbers = new ObservableCollection<int>(PagesNumbers
+                    .Take(maxDisplayedPages));
+            }
+            else
+            {
+                if (PagesNumbers.Skip(SelectedPageNumber - PageListAvg(DisplayedPagesNumbers)).Count() > maxDisplayedPages)
+                    DisplayedPagesNumbers = new ObservableCollection<int>(PagesNumbers
+                        .Skip(SelectedPageNumber - PageListAvg(DisplayedPagesNumbers))
+                        .Take(maxDisplayedPages));
+
+                else
+                    DisplayedPagesNumbers = new ObservableCollection<int>(PagesNumbers
+                       .Skip(PagesNumbers.Count - maxDisplayedPages)
+                       .Take(maxDisplayedPages));
+
+            }
+
+            FilterProducts(SearchText, SelectedType, SelectedSort.Property, orderByDescening);
+        }
+
+        private int PageListAvg(IEnumerable<int> collection)
+        {
+            return Convert.ToInt32(Math.Ceiling(collection.Count() / (float)2));
+        }
+
+
         #endregion
 
         #region UIEventHanlers
-        /// <summary>
-        /// Переход на следующую страницу
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Forward_Click(object sender, RoutedEventArgs e)
-        {
-            if (CurrentPage + 1 < MaxPage)
-                CurrentPage++;
-        }
-        /// <summary>
-        /// Переход на предыдущую страницу
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Back_Click(object sender, RoutedEventArgs e)
-        {
-            if (CurrentPage > 0)
-                CurrentPage--;
-        }
         /// <summary>
         /// Выборка сортировки по возрастанию
         /// </summary>
@@ -222,7 +268,7 @@ namespace NotMVVMProject.Views
                         LoadProducts();
                         FilterProducts(SearchText, SelectedType, SelectedSort.Property, OrderByDescening);
                         MessageBox.Show("Товар успешно обновлён!", "Оповещение", MessageBoxButton.OK, MessageBoxImage.Information);
-                        
+
                     }
                     catch (Exception ex)
                     {
@@ -252,7 +298,7 @@ namespace NotMVVMProject.Views
                 {
                     try
                     {
-                        
+
                         db.Products.Add(productWindow.CurrentProduct);
                         db.SaveChanges();
                         LoadProducts();
@@ -282,5 +328,24 @@ namespace NotMVVMProject.Views
 
 
         #endregion
+
+
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ChangePage();
+        }
+
+        private void toFirstPage_Click(object sender, RoutedEventArgs e)
+        {
+            SelectedPageNumber = 1;
+            ChangePage();
+        }
+
+        private void toLastPage_Click(object sender, RoutedEventArgs e)
+        {
+            SelectedPageNumber = PagesNumbers.Count;
+            ChangePage();
+        }
     }
 }
