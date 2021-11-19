@@ -5,6 +5,7 @@ namespace NotMVVMProject.Data
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.Linq;
 
     public partial class Products : BaseEntity
     {
@@ -30,7 +31,11 @@ namespace NotMVVMProject.Data
 
         public string ImagePath { get; set; }
 
+        public decimal TotalPrice {
+            get => MaterialToProduct.Sum(p => Convert.ToDecimal(p.Materials.Price)); 
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MaterialToProduct> MaterialToProduct { get; set; }
+        public virtual List<MaterialToProduct> MaterialToProduct { get; set; }
     }
 }

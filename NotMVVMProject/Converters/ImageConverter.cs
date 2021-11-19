@@ -13,9 +13,22 @@ namespace NotMVVMProject.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return string.IsNullOrEmpty(value.ToString())
-                ? File.ReadAllBytes("../../Resources/Images/not_found.png")
-                : File.ReadAllBytes($"../../Resources/{value}");
+            
+            if (string.IsNullOrEmpty(value.ToString()))
+            {
+                if (File.Exists("Images/not_found.png"))
+                    return File.ReadAllBytes("Images/not_found.png");
+                else return null;
+            }
+            else
+            {
+                
+                if (File.Exists($"{value}"))
+                {
+                    return File.ReadAllBytes($"{value}");
+                }
+                else return null;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

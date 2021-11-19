@@ -36,6 +36,7 @@ namespace NotMVVMProject.Views
         private string amount;
         private string search;
         private string image;
+        private string tempImage;
         private string amountOfMaterial;
         //материалы в comboBox
         private ObservableCollection<Materials> materials;
@@ -185,8 +186,9 @@ namespace NotMVVMProject.Views
             if (openFileDialog.ShowDialog() == true)
             {
                 var newFilePath = "Images/" + Guid.NewGuid() + ".png";
-                File.Copy(openFileDialog.FileName, $@"../../Resources/{newFilePath}");
-                Image = newFilePath;
+                
+                tempImage = newFilePath;
+                Image = openFileDialog.FileName;
             }
         }
 
@@ -241,6 +243,7 @@ namespace NotMVVMProject.Views
                 CurrentProduct.ProductName = ProductName;
                 if (ValidateProduct(CurrentProduct))
                 {
+                    File.Copy(Image, tempImage);
                     //добавление продукта, если флаг равен true, и редактирование продукта, если флаг false
                     if (isOperationAdd)
                     {

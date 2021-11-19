@@ -49,7 +49,7 @@
                                 <TextBlock Text="{Binding MaterialToProduct, Converter={StaticResource matConv}}"/>
                             </StackPanel>
                             <StackPanel HorizontalAlignment="Right">
-                                <TextBlock Text="{Binding Amount}"/>
+                                <TextBlock Text="{Binding TotalPrice}"/>
                             </StackPanel>
                         </Grid>
                     </Border>

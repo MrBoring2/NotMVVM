@@ -22,4 +22,3 @@ C:\Users\MrBoring\source\repos\NotMVVMProject\NotMVVMProject\obj\Debug\NotMVVMPr
 C:\Users\MrBoring\source\repos\NotMVVMProject\NotMVVMProject\obj\Debug\Views\ProductWindow.g.cs
 C:\Users\MrBoring\source\repos\NotMVVMProject\NotMVVMProject\obj\Debug\Views\ProductWindow.baml
 C:\Users\MrBoring\source\repos\NotMVVMProject\NotMVVMProject\obj\Debug\GeneratedInternalTypeHelper.g.cs
-C:\Users\MrBoring\source\repos\NotMVVMProject\NotMVVMProject\obj\Debug\NotMVVMProject.csproj.AssemblyReference.cache

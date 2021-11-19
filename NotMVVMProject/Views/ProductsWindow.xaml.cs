@@ -129,7 +129,7 @@ namespace NotMVVMProject.Views
         {
             using (var db = new TestProductsContext())
             {
-                Products = new ObservableCollection<Products>(db.Products.Include("MaterialToProduct").ToList());
+                Products = new ObservableCollection<Products>(db.Products.Include("MaterialToProduct").Include("MaterialToProduct.Materials").ToList());
             }
         }
         /// <summary>
@@ -186,10 +186,13 @@ namespace NotMVVMProject.Views
             OnPropertyChanged(nameof(DispayPages));
         }
 
+        /// <summary>
+        /// Изменение пагинатора
+        /// </summary>
         private void ChangePage()
         {
             //if (SelectedPageIndex >= Math.Ceiling((float)DisplayedPagesNumbers.Count / (float)2))
-
+            
             if (SelectedPageNumber <= PageListAvg(DisplayedPagesNumbers))
             {
                 DisplayedPagesNumbers = new ObservableCollection<int>(PagesNumbers
@@ -211,7 +214,11 @@ namespace NotMVVMProject.Views
 
             FilterProducts(SearchText, SelectedType, SelectedSort.Property, orderByDescening);
         }
-
+        /// <summary>
+        /// Дре
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>
         private int PageListAvg(IEnumerable<int> collection)
         {
             return Convert.ToInt32(Math.Ceiling(collection.Count() / (float)2));
